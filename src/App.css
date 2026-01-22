@@ -1,0 +1,19 @@
+
+html, body {
+  margin: 0;
+  height: auto; /* important */
+}
+
+#root {
+  min-height: 300vh; /* 3x viewport height */
+}
+
+
+.appContainer {
+  position: fixed; /* FIXED */
+  top: 0; left: 0; right: 0; bottom: 0; /* fill viewport */
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none; /* optional if you want clicks to pass through */
+  z-index: 1; /* optional, put canvas on top */
+}
