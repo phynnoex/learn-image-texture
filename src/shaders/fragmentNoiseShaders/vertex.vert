@@ -1,5 +1,6 @@
 uniform float u_time;
 varying vec3 v_position;
+uniform float u_scrollSpeed;
 varying vec2 vUv;
 varying float vZ;
 uniform float u_seed;
@@ -94,10 +95,23 @@ float cnoise(vec3 P) {
 
 void main() {
 
+    vec3 position = position;
+    vec3 worldPosition = (modelMatrix * vec4(position, 1.0)).xyz;
+
     vUv = uv;
     vDisplacement = cnoise(position + u_time + u_seed );
-
     vec3 newPosition = position + normal * ( vDisplacement * 0.1);
+
+    //curve
+    float xDisplacement = 1.2 * cos(worldPosition.x * 0.3);
+    newPosition.y += xDisplacement;
+    newPosition.y  -= 1.2;
+
+    
+    float yDisplacement = -sin(uv.y * 3.142) * u_scrollSpeed;
+    newPosition.x += yDisplacement;
+    
+
     vec4 modelPosition = modelMatrix * vec4(newPosition, 1.0);
 
     vec4 viewPosition = viewMatrix * modelPosition;
