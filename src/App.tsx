@@ -18,6 +18,7 @@ import * as THREE from 'three'
 type PlaneUniforms = {
   u_time: { value: number };
   u_progress: { value: number };
+  u_scrollSpeed: { value: number };
   u_texture1: { value: THREE.Texture | null };
   u_texture2: { value: THREE.Texture | null };
 }
@@ -39,6 +40,7 @@ const Plane = ({ progressSpeed, progressTarget }: planeProps) => {
     u_progress: { value: 0 },
     u_texture1: { value: null },
     u_texture2: { value: null },
+    u_scrollSpeed: {value: 0},
   })
 
 
