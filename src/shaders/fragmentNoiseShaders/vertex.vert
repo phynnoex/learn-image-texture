@@ -3,6 +3,7 @@ varying vec3 v_position;
 varying vec2 vUv;
 varying float vZ;
 uniform float u_seed;
+uniform float u_progress;
 
 varying float vDisplacement;
 varying float vWave;
@@ -98,10 +99,11 @@ void main() {
     vDisplacement = cnoise(position + u_time + u_seed );
 
     vec3 newPosition = position + normal * ( vDisplacement * 0.1);
+    newPosition.x += (-sin(uv.y * 3.142) * u_progress);
+    
     vec4 modelPosition = modelMatrix * vec4(newPosition, 1.0);
 
-    vec4 viewPosition = viewMatrix * modelPosition;
-    vec4 projectedPosition = projectionMatrix * viewPosition;
+    vec4 projectedPosition = projectionMatrix * viewMatrix * modelPosition;
 
     gl_Position = projectedPosition;
 }

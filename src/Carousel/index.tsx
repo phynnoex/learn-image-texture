@@ -68,7 +68,7 @@ export default function Carousel({ gap, position, images }: carouselProps) {
     }
 
     useFrame(() => {
-        
+
         imageRefs.current.forEach((ref) => {
             if (!ref) return;
             ref.position.x =
@@ -81,6 +81,9 @@ export default function Carousel({ gap, position, images }: carouselProps) {
         imageRefs.current.forEach((ref) => {
             if (ref) {
                 ref.position.x -= velocity * 0.01
+                if (ref.material instanceof THREE.ShaderMaterial) {
+                    ref.material.uniforms.u_progress.value = velocity * 0.01
+                }
             }
         });
     })
@@ -88,7 +91,7 @@ export default function Carousel({ gap, position, images }: carouselProps) {
     return (
         <group>
             {images.map((url, index) => (
-                <GLimage image={url} key={index} position={[position[0]  + index * gap, position[1], position[2]]} ref={(el) => { if (el) imageRefs.current[index] = el; }} />
+                <GLimage image={url} key={index} position={[position[0] + index * gap, position[1], position[2]]} ref={(el) => { if (el) imageRefs.current[index] = el; }} />
             ))}
         </group>
     )
