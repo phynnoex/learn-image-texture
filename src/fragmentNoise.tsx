@@ -8,6 +8,7 @@ import { forwardRef, Suspense, useEffect, useRef, type RefObject, } from 'react'
 import * as THREE from 'three'
 import type { ThreeElements } from '@react-three/fiber';
 import Carousel from './Carousel';
+import Carroussel from './Caroussel2';
 
 // type FlagUniforms = {
 //   u_time: { value: number };
@@ -36,7 +37,7 @@ type CustomMeshProps = ThreeElements['mesh'] & {
 // }
 
 
-const Plane = forwardRef<THREE.Mesh, CustomMeshProps>(({ image, ...props }, meshRef ) => {
+const Plane = forwardRef<THREE.Mesh, CustomMeshProps>(({ image, ...props }, meshRef) => {
 
     const uniforms = useRef<PlaneUniforms>({
         u_time: { value: 0 },
@@ -75,17 +76,29 @@ const Plane = forwardRef<THREE.Mesh, CustomMeshProps>(({ image, ...props }, mesh
 })
 
 const images: string[] = [
-    "image1.jpg", "image2.jpg", "image3.jpg","image1.jpg", "image2.jpg", "image3.jpg"
+    "image1.jpg", "image2.jpg", "image3.jpg", 
 ]
+
+ const designData:{image: string, link: string}[] = [
+    {image:"image1.jpg", link:"design1"},
+    {image:"image2.jpg", link:"design2"},
+    {image:"image1.jpg", link:"design1"},
+    {image:"image2.jpg", link:"design2"}
+ ]
 
 
 export default function FragMentNoise() {
     return (
         <div className='appContainer'>
-            <Canvas camera={{position:[0,0,3]}}>
+            <Canvas camera={{ position: [0, 0, 10], fov: 60 }}>
+                <ambientLight intensity={0.9} />
+                <directionalLight position={[10, 10, 10]} intensity={1} />
                 <Suspense fallback={null}>
-                    <Carousel images={images} gap={1.4} position={[0, -1, 0]} />
+                    <Carroussel designObjects={designData} />
                 </Suspense>
+                {/* <OrbitControls /> */}
+                <axesHelper />
+                <gridHelper />
             </Canvas>
         </div>
     )

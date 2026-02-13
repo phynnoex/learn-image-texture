@@ -104,9 +104,11 @@ void main() {
     vec3 newPosition = position + normal * ( vDisplacement * 0.1);
 
     //curve
-    float xDisplacement = 1.2 * cos(worldPosition.x * 0.3);
-    newPosition.y += xDisplacement;
-    newPosition.y  -= 1.2;
+   
+    float xDisplacement = -3.0 * cos(worldPosition.x * 0.3);
+    newPosition.z +=  xDisplacement;
+    newPosition.z  += 2.0;
+    newPosition.y  += 1.0;
 
     
     float yDisplacement = -sin(uv.y * 3.142) * u_scrollSpeed;

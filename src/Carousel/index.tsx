@@ -58,6 +58,7 @@ const GLimage = forwardRef<THREE.Mesh, GLImageProps>(
           uniforms={uniforms.current}
           vertexShader={vertexShader}
           fragmentShader={fragmentShader}
+          side={THREE.DoubleSide}
         />
       </mesh>
     );
@@ -84,7 +85,8 @@ export default function Carousel({ gap, position, images }: carouselProps) {
         const velocity = lenis.velocity
         imageRefs.current.forEach((ref) => {
             if (ref) {
-                ref.position.x -= velocity * 0.01
+                const material = ref.material as THREE.ShaderMaterial
+                material.uniforms.u_scrollSpeed.value = velocity * 0.01;
             }
         });
     })
