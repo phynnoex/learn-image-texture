@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import glsl from 'vite-plugin-glsl';
+import svgrPlugin from 'vite-plugin-svgr';
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -23,5 +24,6 @@ export default defineConfig({
       watch: true, // Recompile shader on change
       root: "/", // Directory for root imports
     }),
+    svgrPlugin(),
   ],
 });

@@ -4,6 +4,9 @@ import "./App.css"
 import { Suspense, useRef, useState, } from 'react'
 
 import type { ThreeEvent } from '@react-three/fiber';
+import ArrowUp from './assets/arrowUp.svg?react';
+import * as animationData from './assets/animationData.json';
+import Lottie from 'lottie-react';
 
 import Carroussel from './Caroussel2';
 
@@ -74,17 +77,18 @@ import Carroussel from './Caroussel2';
 
 
 
-const designData: { image: string, link: string }[] = [
-    { image: "image1.jpg", link: "design1" },
-    { image: "image2.jpg", link: "design2" },
-    { image: "image1.jpg", link: "design1" },
-    { image: "image2.jpg", link: "design2" }
+const designData: { image: string, link: string, title: string, description: string }[] = [
+    { image: "image1.jpg", link: "design1", title: "Web Portfolio", description: "lorem ipsum dolor sit amet consecteur adispiscing" },
+    { image: "image2.jpg", link: "design2", title: 'FanSurvey', description: "lorem ipsum dolor sit amet consecteur adispiscing" },
+    { image: "image1.jpg", link: "design1", title: "Web Portfolio", description: "lorem ipsum dolor sit amet consecteur adispiscing" },
+    { image: "image2.jpg", link: "design2", title: 'FanSurvey', description: "lorem ipsum dolor sit amet consecteur adispiscing" },
 ]
 
 
 export default function FragMentNoise() {
     const divRef = useRef<HTMLDivElement>(null)
     const [visible, setVisible] = useState(false);
+    const [displayIndex, setDisplayIndex] = useState(0);
     const handlePointerMove = (event: ThreeEvent<PointerEvent>) => {
         if (!divRef.current) return;
         divRef.current.style.transform = `translate(${event.clientX}px, ${event.clientY}px)`;
@@ -96,22 +100,18 @@ export default function FragMentNoise() {
                 <ambientLight intensity={0.9} />
                 <directionalLight position={[10, 10, 10]} intensity={1} />
                 <Suspense fallback={null}>
-                    <Carroussel designObjects={designData} pointerMoveHandler={handlePointerMove} handleVisible={setVisible} />
+                    <Carroussel handleDisplayIndex={setDisplayIndex} designObjects={designData} pointerMoveHandler={handlePointerMove} handleVisible={setVisible} />
                 </Suspense>
                 {/* <OrbitControls /> */}
                 <axesHelper />
                 <gridHelper />
             </Canvas>
-            {visible && <div ref={divRef} style={{
-                background: 'green',
-                position: 'fixed',
-                top: 0,
-                left: 0,
-                width: 50,
-                height: 50,
-                zIndex: 9999
-
-            }}>
+            {visible && <div className='tooltip' ref={divRef} >
+                <div className='tooltip_title'><div className='title_text'><span>Web Design</span>{designData[displayIndex % 2].title} </div><button><ArrowUp stroke='white' /></button></div>
+                <div className='tooltip_description'>{designData[displayIndex % 2].description} <div className='tooltip_button'>
+                    <div>click to view my process</div>
+                    <Lottie animationData={JSON.parse(JSON.stringify(animationData))} loop autoplay={true} style={{ height: 30, width: 30 }} />
+                </div></div>
 
             </div>}
         </div>

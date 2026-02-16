@@ -1,19 +1,98 @@
-
-html, body {
+html,
+body {
   margin: 0;
-  height: auto; /* important */
+  height: auto;
+  /* important */
 }
 
 #root {
-  min-height: 300vh; /* 3x viewport height */
+  min-height: 300vh;
+  /* 3x viewport height */
 }
 
 
 .appContainer {
-  position: fixed; /* FIXED */
-  top: 0; left: 0; right: 0; bottom: 0; /* fill viewport */
+  position: fixed;
+  /* FIXED */
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  /* fill viewport */
   width: 100vw;
   height: 100vh;
-  pointer-events: none; /* optional if you want clicks to pass through */
-  z-index: 1; /* optional, put canvas on top */
+  pointer-events: none;
+  /* optional if you want clicks to pass through */
+  z-index: 1;
+  /* optional, put canvas on top */
+  cursor: url('./assets/cursor.png')16 16, none;
+}
+
+.tooltip {
+  position: absolute;
+
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  padding: 0px;
+  top: 0px;
+  left: 0px;
+  width: 200px;
+  height: 120px;
+  z-index: 9999;
+  font-family: Arial, Helvetica, sans-serif;
+  border-radius: 12px;
+  background-color: #D9E9E3;
+}
+
+.tooltip_title {
+  height: 60px;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.tooltip_title button{
+  background-color: black;
+  outline: none;
+  stroke: none;
+  border: none;
+  height: 32px;
+  width: 32px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+} 
+.tooltip_title .title_text{
+  font-size: 16px;
+  font-weight: bold;
+  display: flex;
+  flex-direction: column;
+} 
+.tooltip_title .title_text span{
+  font-size: 10px;
+  font-weight: 200;
+} 
+
+.tooltip_description {
+  font-size: 12px;
+  background-color: white;
+  padding: 8px;
+  border-radius:0px 0px 12px 12px;
+}
+
+.tooltip_button{
+  
+  margin-top: 8px;
+  background-color: black;
+  height: 30px;
+  border-radius: 6px;
+  color: white;
+  display: flex;
+  align-items: center;
+  padding: 0px 8px;
+  justify-content: space-between;
+
 }

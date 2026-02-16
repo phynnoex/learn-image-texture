@@ -25,7 +25,7 @@ void main() {
     // newPosition.z  += 2.0;
     // newPosition.y  += 1.0;
 
-    float displacement = -sin(uv.y * 3.1415) * u_scrollSpeed * 0.1 ; // *2, *5, etc.
+    float displacement = -sin(uv.y * 3.1415) * u_scrollSpeed * 0.01 ; // *2, *5, etc.
     newPosition.x += displacement;
     
     

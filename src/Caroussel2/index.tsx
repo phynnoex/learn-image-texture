@@ -20,6 +20,7 @@ type SlideProps = {
     index: number
     link: string
     handleVisible: React.Dispatch<React.SetStateAction<boolean>>
+    handleDisplayIndex: React.Dispatch<React.SetStateAction<number>>
     pointerHandler: (e: ThreeEvent<PointerEvent>) => void;
 }
 
@@ -29,7 +30,7 @@ type ImageUniforms = {
     u_scrollSpeed: { value: number };
 };
 const Slide = forwardRef<THREE.Mesh, SlideProps>(
-    ({ img, index, link, handleVisible, pointerHandler }, meshRef) => {
+    ({ img, index, link, handleDisplayIndex, handleVisible, pointerHandler }, meshRef) => {
         const uniforms = useRef<ImageUniforms>({
             u_image: { value: null },
             u_scrollSpeed: { value: 0 }
@@ -62,7 +63,7 @@ const Slide = forwardRef<THREE.Mesh, SlideProps>(
 
 
         return (
-            <mesh geometry={geometry} ref={meshRef} key={index} onPointerLeave={() => handleVisible(false)} onPointerEnter={() => { handleVisible(true) }} onPointerMove={(e) => pointerHandler(e)} onClick={() => navigate(`/design/${link}`)}>
+            <mesh geometry={geometry} ref={meshRef} key={index} onPointerLeave={() => handleVisible(false)} onPointerEnter={() => { handleDisplayIndex(index); handleVisible(true) }} onPointerMove={(e) => pointerHandler(e)} onClick={() => navigate(`/design/${link}`)}>
                 <shaderMaterial
                     ref={material}
                     uniforms={uniforms.current}
@@ -75,12 +76,13 @@ const Slide = forwardRef<THREE.Mesh, SlideProps>(
     })
 
 type CarouselProps = {
-    designObjects: { image: string, link: string, }[]
+    designObjects: { image: string, link: string, title: string, description: string}[]
     pointerMoveHandler: (e: ThreeEvent<PointerEvent>) => void
     handleVisible: React.Dispatch<React.SetStateAction<boolean>>
+    handleDisplayIndex: React.Dispatch<React.SetStateAction<number>>
 }
 
-export default function Carroussel({ designObjects, handleVisible, pointerMoveHandler }: CarouselProps) {
+export default function Carroussel({ designObjects, handleDisplayIndex, handleVisible, pointerMoveHandler }: CarouselProps) {
     const groupRef = useRef<THREE.Group>(null);
     const scrollRef = useRef(0);
     const imageRefs = useRef<THREE.Mesh[]>([]);
@@ -92,21 +94,27 @@ export default function Carroussel({ designObjects, handleVisible, pointerMoveHa
         imageRefs.current.forEach((ref) => {
             if (ref) {
                 const material = ref.material as THREE.ShaderMaterial
-                material.uniforms.u_scrollSpeed.value = velocity * 0.1;
+                material.uniforms.u_scrollSpeed.value = (velocity) * 0.5;
             }
         });
 
     })
 
 
+    const maxVelocity = 30;
 
     useFrame(() => {
-        if (groupRef.current) {
-            // Smoothly rotate based on Lenis velocity
-            groupRef.current.rotation.y += scrollRef.current * 0.0008
-        }
-    })
+        if (!groupRef.current) return;
 
+        const rawVelocity = scrollRef.current;
+
+        const clampedVelocity = Math.max(
+            -maxVelocity,
+            Math.min(maxVelocity, rawVelocity)
+        );
+
+        groupRef.current.rotation.y += clampedVelocity * 0.0008;
+    });
 
 
 
@@ -117,7 +125,7 @@ export default function Carroussel({ designObjects, handleVisible, pointerMoveHa
 
                 {designObjects.map((img, index) => (
 
-                    <Slide handleVisible={handleVisible} pointerHandler={pointerMoveHandler} key={index} ref={(el) => { if (el) imageRefs.current[index] = el; }} img={img.image} index={index} link={img.link} />
+                    <Slide handleDisplayIndex={handleDisplayIndex} handleVisible={handleVisible} pointerHandler={pointerMoveHandler} key={index} ref={(el) => { if (el) imageRefs.current[index] = el; }} img={img.image} index={index} link={img.link} />
 
                 ))}
 
