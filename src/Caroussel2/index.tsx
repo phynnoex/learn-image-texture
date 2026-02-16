@@ -1,11 +1,11 @@
-import { forwardRef, useEffect, useMemo, useRef, useState } from "react"
+import { forwardRef, useEffect, useMemo, useRef } from "react"
 import * as THREE from "three"
 import { useTexture } from "@react-three/drei"
 import { useLenis } from "lenis/react"
 import vertexShader from './shaders/vertex.vert'
 import fragmentShader from './shaders/fragment.frag'
-import { useFrame } from "@react-three/fiber"
-import { Link, useNavigate } from "react-router-dom"
+import { useFrame, type ThreeEvent } from "@react-three/fiber"
+import { useNavigate } from "react-router-dom"
 
 
 
@@ -19,6 +19,8 @@ type SlideProps = {
     img: string
     index: number
     link: string
+    handleVisible: React.Dispatch<React.SetStateAction<boolean>>
+    pointerHandler: (e: ThreeEvent<PointerEvent>) => void;
 }
 
 
@@ -27,7 +29,7 @@ type ImageUniforms = {
     u_scrollSpeed: { value: number };
 };
 const Slide = forwardRef<THREE.Mesh, SlideProps>(
-    ({ img, index, link }, meshRef) => {
+    ({ img, index, link, handleVisible, pointerHandler }, meshRef) => {
         const uniforms = useRef<ImageUniforms>({
             u_image: { value: null },
             u_scrollSpeed: { value: 0 }
@@ -58,24 +60,27 @@ const Slide = forwardRef<THREE.Mesh, SlideProps>(
 
 
 
+
         return (
-            <mesh geometry={geometry} ref={meshRef} key={index} onClick={() => navigate(`/design/${link}`)}>
+            <mesh geometry={geometry} ref={meshRef} key={index} onPointerLeave={() => handleVisible(false)} onPointerEnter={() => { handleVisible(true) }} onPointerMove={(e) => pointerHandler(e)} onClick={() => navigate(`/design/${link}`)}>
                 <shaderMaterial
                     ref={material}
                     uniforms={uniforms.current}
                     vertexShader={vertexShader}
                     fragmentShader={fragmentShader}
                     side={THREE.DoubleSide}
-                     />
+                />
             </mesh>
         )
     })
 
 type CarouselProps = {
-    designObjects: { image: string, link: string }[]
+    designObjects: { image: string, link: string, }[]
+    pointerMoveHandler: (e: ThreeEvent<PointerEvent>) => void
+    handleVisible: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-export default function Carroussel({ designObjects }: CarouselProps) {
+export default function Carroussel({ designObjects, handleVisible, pointerMoveHandler }: CarouselProps) {
     const groupRef = useRef<THREE.Group>(null);
     const scrollRef = useRef(0);
     const imageRefs = useRef<THREE.Mesh[]>([]);
@@ -101,11 +106,23 @@ export default function Carroussel({ designObjects }: CarouselProps) {
             groupRef.current.rotation.y += scrollRef.current * 0.0008
         }
     })
+
+
+
+
+
     return (
-        <group ref={groupRef} rotation-y={3.142 / 1.2} position={[0, 0, 13]}>
-            {designObjects.map((img, index) => (
-                <Slide key={index} ref={(el) => { if (el) imageRefs.current[index] = el; }} img={img.image} index={index} link={img.link} />
-            ))}
-        </group>
+        <>
+            <group ref={groupRef} rotation-y={3.142 / 1.2} position={[0, 0, 13]}>
+
+                {designObjects.map((img, index) => (
+
+                    <Slide handleVisible={handleVisible} pointerHandler={pointerMoveHandler} key={index} ref={(el) => { if (el) imageRefs.current[index] = el; }} img={img.image} index={index} link={img.link} />
+
+                ))}
+
+            </group>
+
+        </>
     )
 }
