@@ -76,7 +76,7 @@ const Slide = forwardRef<THREE.Mesh, SlideProps>(
     })
 
 type CarouselProps = {
-    designObjects: { image: string, link: string, title: string, description: string}[]
+    designObjects: { image: string, link: string, title: string, description: string }[]
     pointerMoveHandler: (e: ThreeEvent<PointerEvent>) => void
     handleVisible: React.Dispatch<React.SetStateAction<boolean>>
     handleDisplayIndex: React.Dispatch<React.SetStateAction<number>>
@@ -105,14 +105,11 @@ export default function Carroussel({ designObjects, handleDisplayIndex, handleVi
 
     useFrame(() => {
         if (!groupRef.current) return;
-
         const rawVelocity = scrollRef.current;
-
         const clampedVelocity = Math.max(
             -maxVelocity,
             Math.min(maxVelocity, rawVelocity)
         );
-
         groupRef.current.rotation.y += clampedVelocity * 0.0008;
     });
 
